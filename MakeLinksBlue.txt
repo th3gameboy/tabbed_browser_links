@@ -1,0 +1,35 @@
+function makeLinksBlue() {
+  var doc = DocumentApp.getActiveDocument();
+  var body = doc.getBody();
+  
+  // Find all text in the document
+  var text = body.getText();
+  
+  // Regular expression to find URLs
+  var urlRegex = /(https?:\/\/[^\s]+)/g;
+  
+  // Split the text into paragraphs
+  var paragraphs = body.getParagraphs();
+  
+  for (var i = 0; i < paragraphs.length; i++) {
+    var paragraph = paragraphs[i];
+    var paragraphText = paragraph.getText();
+    
+    // Check for URLs in the paragraph
+    var matches = paragraphText.match(urlRegex);
+    
+    if (matches) {
+      for (var j = 0; j < matches.length; j++) {
+        var url = matches[j];
+        
+        // Find the start and end of the URL in the paragraph
+        var startIndex = paragraphText.indexOf(url);
+        var endIndex = startIndex + url.length;
+        
+        // Apply link and blue color
+        paragraph.editAsText().setLinkUrl(startIndex, endIndex - 1, url);
+        paragraph.editAsText().setForegroundColor(startIndex, endIndex - 1, "#0000FF");
+      }
+    }
+  }
+}
